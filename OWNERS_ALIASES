@@ -8,31 +8,38 @@ aliases:
 
   root-reviewers:
     - thockin
+    - BenTheElder
     - destijl
     - HavenXia
 
   # Strict /api/ ownership (no_parent_owners: true)
   api-approvers:
     - thockin
+    - BenTheElder
     - moficodes
   api-reviewers:
     - HavenXia
     - destijl
 
-  # Scenario 1 & 2 test groups (none of thockin, destijl, or HavenXia has Write
-  # access on this repo; all three are invited at Triage, push=false):
-  # - thockin and destijl (Greg Castle) are in BOTH dir-a-approvers and
-  #   dir-b-approvers (tests Tim #1: single common non-Write approver across A + B).
+  # Scenario 1 & 2 test groups (none of thockin, BenTheElder, destijl, or
+  # HavenXia has Write access on this repo; all four are invited at Triage,
+  # push=false):
+  # - thockin, BenTheElder, and destijl (Greg Castle) are in BOTH
+  #   dir-a-approvers and dir-b-approvers (tests Tim #1: single common
+  #   non-Write approver across A + B).
   # - HavenXia is in dir-c-approvers (tests Tim #2: disjoint non-Write approvers
-  #   across dir-a + dir-c, requiring one of {thockin, destijl} AND HavenXia).
+  #   across dir-a + dir-c, requiring one of {thockin, BenTheElder, destijl}
+  #   AND HavenXia).
   dir-a-approvers:
     - thockin
+    - BenTheElder
     - destijl
   dir-a-reviewers:
     - HavenXia
 
   dir-b-approvers:
     - thockin
+    - BenTheElder
     - destijl
   dir-b-reviewers:
     - HavenXia
@@ -41,11 +48,13 @@ aliases:
     - HavenXia
   dir-c-reviewers:
     - thockin
+    - BenTheElder
     - destijl
 
   # Subsystem slice inheriting root `maintainers` (/site/ and /docs/)
   site-approvers:
     - HavenXia
+    - BenTheElder
     - destijl
   site-reviewers:
     - thockin

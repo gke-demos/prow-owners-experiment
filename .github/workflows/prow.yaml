@@ -4,11 +4,12 @@ on:
     types: [opened, reopened, labeled, unlabeled]
   issue_comment:
     types: [created]
-  # Safe because the reusable workflow never checks out or runs PR code; it
-  # checks out cncf/prow-github-actions at the pinned SHA and reads OWNERS
-  # strictly from the base branch (main).
+  # Safe because neither job checks out or executes PR head code:
+  # - check-ready-issue checks out the base branch (main) only.
+  # - prow checks out cncf/prow-github-actions at the pinned SHA and reads
+  #   OWNERS strictly from main.
   pull_request_target:
-    types: [opened, reopened, synchronize, ready_for_review, labeled, unlabeled]
+    types: [opened, reopened, edited, synchronize, ready_for_review, labeled, unlabeled]
   pull_request_review:
     types: [submitted, dismissed]
   merge_group:
@@ -31,8 +32,36 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check-ready-issue:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    outputs:
+      allowed: ${{ steps.verify.outputs.allowed }}
+    steps:
+      - name: Checkout base branch scripts only
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - name: Verify linked ready-for-pr issue
+        id: verify
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: .github/scripts/prow/check-ready-issue.sh
+
   prow:
-    if: github.event_name != 'workflow_dispatch' && github.event_name != 'push' && github.event_name != 'merge_group'
+    needs: [check-ready-issue]
+    if: >-
+      always() &&
+      github.event_name != 'workflow_dispatch' &&
+      github.event_name != 'push' &&
+      github.event_name != 'merge_group' &&
+      (needs.check-ready-issue.result == 'skipped' ||
+       (needs.check-ready-issue.result == 'success' && needs.check-ready-issue.outputs.allowed == 'true'))
     uses: cncf/prow-github-actions/.github/workflows/prow.yml@a192ee15687d4ede4d553ff0929b2b296666afd7 # v3.5.0
     with:
       prow-commands: /assign /unassign /cc /uncc /auto-cc /approve /lgtm /hold /close /reopen /lock /retitle /milestone /remove /area /kind /prio /triage /label /lifecycle /stage /status /help /good-first-issue /check-required-labels /retest /test /ok-to-test /label-sync
