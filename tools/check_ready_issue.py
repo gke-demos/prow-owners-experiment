@@ -134,10 +134,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", required=True, help="owner/repo")
     parser.add_argument("--pr", required=True, type=int, help="Pull request number")
+    parser.add_argument(
+        "--reopen-attempt",
+        action="store_true",
+        help="Validate a closed PR before allowing Prow's /reopen command to run",
+    )
     args = parser.parse_args()
 
     pr = gh_api_json(f"repos/{args.repo}/pulls/{args.pr}")
-    if str(pr.get("state", "")).lower() != "open":
+    is_open = str(pr.get("state", "")).lower() == "open"
+    if not is_open and not args.reopen_attempt:
         print(f"PR #{args.pr} is already closed; skipping.")
         write_github_output(False)
         return 0
@@ -161,11 +167,12 @@ def main() -> int:
             method="POST",
             fields={"body": comment},
         )
-        gh_api_json(
-            f"repos/{args.repo}/pulls/{args.pr}",
-            method="PATCH",
-            fields={"state": "closed"},
-        )
+        if is_open:
+            gh_api_json(
+                f"repos/{args.repo}/pulls/{args.pr}",
+                method="PATCH",
+                fields={"state": "closed"},
+            )
 
     write_github_output(allowed)
     return 0

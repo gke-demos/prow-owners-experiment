@@ -33,7 +33,11 @@ concurrency:
 
 jobs:
   check-ready-issue:
-    if: github.event_name == 'pull_request_target'
+    if: >-
+      github.event_name == 'pull_request_target' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request != null &&
+       contains(github.event.comment.body, '/reopen'))
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -44,13 +48,14 @@ jobs:
       - name: Checkout base branch scripts only
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          ref: ${{ github.event.pull_request.base.sha || github.event.repository.default_branch }}
           persist-credentials: false
       - name: Verify linked ready-for-pr issue
         id: verify
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
+          REOPEN_ATTEMPT: ${{ github.event_name == 'issue_comment' }}
         run: .github/scripts/prow/check-ready-issue.sh
 
   prow:
