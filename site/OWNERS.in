@@ -1,0 +1,8 @@
+# Inherits root `maintainers` because no_parent_owners is omitted.
+approvers:
+  - site-approvers
+reviewers:
+  - site-reviewers
+labels:
+  - area/site
+  - area/docs

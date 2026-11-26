@@ -1,0 +1,6 @@
+apiVersion: substrate.ate.dev/v1alpha1
+kind: Actor
+metadata:
+  name: sample-actor
+spec:
+  runtime: gvisor

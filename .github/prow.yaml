@@ -1,0 +1,172 @@
+# Prow configuration for gke-demos/prow-owners-experiment (mirrors Option 4 setup
+# for agent-substrate/substrate).
+
+labels:
+  labels:
+    - name: ready-for-pr
+      color: 0e8a16
+      description: Issue has been vetted by an area owner and is ready for a PR.
+    - name: needs-rebase
+      color: e11d21
+      description: Pull request has merge conflicts and needs a rebase.
+
+  kind:
+    - name: bug
+      color: e11d21
+      description: Categorizes issue or PR as related to a bug.
+    - name: feature
+      color: c7def8
+      description: Categorizes issue or PR as related to a new feature.
+    - name: cleanup
+      color: c5def5
+      description: Categorizes issue or PR as related to cleaning up code or debt.
+    - name: docs
+      color: c7def8
+      description: Categorizes issue or PR as related to documentation.
+    - name: design
+      color: c7def8
+      description: Categorizes issue or PR as related to architecture or design.
+    - name: flake
+      color: f7c6c7
+      description: Categorizes issue or PR as related to a flaky test.
+
+  area:
+    - name: api
+      color: 0052cc
+      description: Public protobuf and CRD APIs.
+    - name: api-machinery
+      color: 0052cc
+      description: Control-plane API server and controller machinery.
+    - name: cli
+      color: 0052cc
+      description: kubectl-ate CLI.
+    - name: network
+      color: 0052cc
+      description: Networking, atenet, and atunnel data plane.
+    - name: security
+      color: 0052cc
+      description: Security, mTLS, OpenFGA authz, and credential providers.
+    - name: identity
+      color: 0052cc
+      description: Actor and workload identity (JWTs, OIDC, pod certs).
+    - name: node
+      color: 0052cc
+      description: atelet node daemon and sandbox lifecycle.
+    - name: gvisor
+      color: 0052cc
+      description: gVisor worker runtime.
+    - name: microVM
+      color: 0052cc
+      description: Cloud Hypervisor microVM worker runtime.
+    - name: storage
+      color: 0052cc
+      description: Volumes, snapshots, image cache, and objectstore plugins.
+    - name: observability
+      color: 0052cc
+      description: OpenTelemetry metrics, events, and logging.
+    - name: dev-infra
+      color: 0052cc
+      description: CI workflows, verify scripts, and repository tooling.
+    - name: install
+      color: 0052cc
+      description: ate-setup installer and Kubernetes manifests.
+    - name: tests
+      color: 0052cc
+      description: Unit and end-to-end test frameworks.
+    - name: benchmarking
+      color: 0052cc
+      description: Scale and latency benchmarks.
+    - name: docs
+      color: 0052cc
+      description: Documentation under docs/ and site/.
+    - name: site
+      color: 0052cc
+      description: Hugo/Docsy website infrastructure.
+    - name: demos
+      color: 0052cc
+      description: Self-contained example applications.
+
+  prio:
+    values:
+      - name: P0
+        color: b60205
+        description: Urgent release or production blocker.
+      - name: P1
+        color: d93f0b
+        description: High-priority work targeted for the current milestone.
+      - name: P2
+        color: fbca04
+        description: Normal backlog priority.
+    exclusive: true
+
+  triage:
+    values:
+      - name: accepted
+        color: 8fc951
+        description: Issue or PR is accepted to be worked on.
+      - name: needs-information
+        color: d455d0
+        description: Needs reproduction steps or context from author.
+      - name: duplicate
+        color: d455d0
+        description: Duplicate of an existing issue.
+      - name: not-reproducible
+        color: d455d0
+        description: Cannot be reproduced as described.
+      - name: wontfix
+        color: ffffff
+        description: Out of scope or working as intended.
+    exclusive: true
+
+  do-not-merge:
+    - name: hold
+      color: e11d21
+      description: Pull request is held via /hold.
+    - name: work-in-progress
+      color: e11d21
+      description: Pull request is a work in progress.
+    - name: invalid-owners-file
+      color: e11d21
+      description: Pull request contains an invalid OWNERS file.
+
+# Silent triage labels (no bot Nag comments).
+require_matching_label:
+  - regexp: ^kind/
+    missing_label: needs-kind
+    issues: true
+    prs: true
+  - regexp: ^triage/
+    missing_label: needs-triage
+    issues: true
+    prs: false
+
+tide:
+  labels: [lgtm, approved]
+  missing_labels: [do-not-merge/*, needs-rebase, hold]
+  merge_method: squash
+  merge_on_events: true
+  merge_queue: auto
+
+hold:
+  label: do-not-merge/hold
+
+blunderbuss:
+  request_count: 2
+  ignore_drafts: true
+  ignore_authors: ['dependabot[bot]']
+
+approve:
+  require_self_approval: false
+  ignore_review_state: false
+  lgtm_acts_as_approve: false
+  github_review: false
+
+lgtm:
+  bind_to_commit: true
+
+authorization:
+  labels: members
+  hold: members
+  close: collaborators
+  review: members
+  users: []

@@ -1,0 +1,43 @@
+# File-defined ownership groups (Kubernetes OWNERS_ALIASES format).
+# Edit group memberships here, then run ./hack/update-owners.sh to regenerate
+# directory OWNERS files (verified in CI by ./hack/verify-owners.sh).
+
+aliases:
+  maintainers:
+    - moficodes
+
+  root-reviewers:
+    - bwsalmon
+    - mastersingh24
+
+  # Strict /api/ ownership (no_parent_owners: true)
+  api-approvers:
+    - moficodes
+    - mastersingh24
+  api-reviewers:
+    - bwsalmon
+
+  # Experiment groups for Tim's Scenarios #1 & #2:
+  # Invite two non-Write test users (`Read` or `Triage` permission, push=false),
+  # put User U in BOTH dir-a-approvers and dir-b-approvers, put User V in
+  # dir-c-approvers, and run ./hack/update-owners.sh.
+  dir-a-approvers:
+    - bwsalmon
+  dir-a-reviewers:
+    - mastersingh24
+
+  dir-b-approvers:
+    - bwsalmon
+  dir-b-reviewers:
+    - mastersingh24
+
+  dir-c-approvers:
+    - mastersingh24
+  dir-c-reviewers:
+    - bwsalmon
+
+  # Subsystem slice inheriting root maintainers (/site/ and /docs/)
+  site-approvers:
+    - bwsalmon
+  site-reviewers:
+    - mastersingh24

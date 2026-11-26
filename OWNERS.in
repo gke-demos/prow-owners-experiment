@@ -1,0 +1,6 @@
+# Root OWNERS source. Do not add `labels:` here because prow-github-actions
+# applies the union of labels along the directory walk.
+approvers:
+  - maintainers
+reviewers:
+  - root-reviewers

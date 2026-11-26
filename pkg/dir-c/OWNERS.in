@@ -1,0 +1,8 @@
+options:
+  no_parent_owners: true
+approvers:
+  - dir-c-approvers
+reviewers:
+  - dir-c-reviewers
+labels:
+  - area/network
