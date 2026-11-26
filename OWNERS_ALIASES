@@ -7,37 +7,45 @@ aliases:
     - moficodes
 
   root-reviewers:
-    - bwsalmon
-    - mastersingh24
+    - thockin
+    - destijl
+    - HavenXia
 
   # Strict /api/ ownership (no_parent_owners: true)
   api-approvers:
+    - thockin
     - moficodes
-    - mastersingh24
   api-reviewers:
-    - bwsalmon
+    - HavenXia
+    - destijl
 
-  # Experiment groups for Tim's Scenarios #1 & #2:
-  # Invite two non-Write test users (`Read` or `Triage` permission, push=false),
-  # put User U in BOTH dir-a-approvers and dir-b-approvers, put User V in
-  # dir-c-approvers, and run ./hack/update-owners.sh.
+  # Scenario 1 & 2 test groups (none of thockin, destijl, or HavenXia has Write
+  # access on this repo; all three are invited at Triage, push=false):
+  # - thockin and destijl (Greg Castle) are in BOTH dir-a-approvers and
+  #   dir-b-approvers (tests Tim #1: single common non-Write approver across A + B).
+  # - HavenXia is in dir-c-approvers (tests Tim #2: disjoint non-Write approvers
+  #   across dir-a + dir-c, requiring one of {thockin, destijl} AND HavenXia).
   dir-a-approvers:
-    - bwsalmon
+    - thockin
+    - destijl
   dir-a-reviewers:
-    - mastersingh24
+    - HavenXia
 
   dir-b-approvers:
-    - bwsalmon
+    - thockin
+    - destijl
   dir-b-reviewers:
-    - mastersingh24
+    - HavenXia
 
   dir-c-approvers:
-    - mastersingh24
+    - HavenXia
   dir-c-reviewers:
-    - bwsalmon
+    - thockin
+    - destijl
 
-  # Subsystem slice inheriting root maintainers (/site/ and /docs/)
+  # Subsystem slice inheriting root `maintainers` (/site/ and /docs/)
   site-approvers:
-    - bwsalmon
+    - HavenXia
+    - destijl
   site-reviewers:
-    - mastersingh24
+    - thockin

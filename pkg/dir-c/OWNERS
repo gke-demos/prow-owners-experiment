@@ -2,8 +2,9 @@
 options:
   no_parent_owners: true
 approvers:
-  - mastersingh24
+  - HavenXia
 reviewers:
-  - bwsalmon
+  - thockin
+  - destijl
 labels:
   - area/network
