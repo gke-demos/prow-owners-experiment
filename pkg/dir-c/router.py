@@ -3,3 +3,7 @@
 
 def name() -> str:
     return "dir-c"
+
+
+def fork_owner_test() -> str:
+    return "dir-c-fork-disjoint"
