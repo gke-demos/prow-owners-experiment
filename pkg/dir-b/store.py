@@ -3,3 +3,7 @@
 
 def name() -> str:
     return "dir-b"
+
+
+def fork_label() -> str:
+    return "dir-b-fork"
