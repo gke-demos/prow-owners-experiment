@@ -3,3 +3,7 @@
 
 def name() -> str:
     return "dir-b"
+
+
+def label() -> str:
+    return "dir-b-v2"
